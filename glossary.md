@@ -6,23 +6,26 @@ permalink: /glossary/
 
 # Table of Contents
 
-* [C# and .NET Terms](#c-and-net-terms)
+* [Terms From C# and .NET](#terms-from-C-and-NET)
 * [PowerShell Terms](#powershell-terms)
 
-# C# and .NET Terms
+# Terms From C# and .NET
 
-Reflection
-
-Assembly - A collection of types
-
-Class - The recipe which defines a type. The class describes how the members of type. For example, the class describes the properties, and methods of a type.
-Object - An instance of a type. Everything in PS is an object (because I can't think of any cases where this is not so).
-Type - Created from a class. Describes the shape and behaviour of the object.
+| Term | Definition | Example | Reference Link |
+|:----:|:-----------|:--------|:--------------:|
+| Assembly   | A compiled file, usually a `.dll`, that contains a library of (typically) related types. | `System.Drawing.Common.dll` |
+| Cast       | In C#, this is a tightly-defined operation which converts one type into another which can be overloaded by defining `op_Explicit()` in a class. | `var n = (uint)x;` |
+| Class      | The definition of a specific type, set out in code. The _template_ from which an object of that specific type is created. Classes can _inherit_ (aka be created by automatically copying from) other classes. | `class MyClass { ... }` |
+| Enum       | A massively simplified version of a class or struct, defining a set of values that bear their own named labels. Each label is mapped to a specific value in the underlying type. | `enum Mood { Bad, Good, HouseIsOnFire }` | [Link](https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/enumeration-types) |
+| Object     | A single instance of a defined type. | `$Object = New-Object -TypeName System.Numerics.Complex` |
+| Reflection | Use of specialised methods (contained in the `System.Reflection` namespace) to access otherwise inaccessible properties, values, and methods during runtime. | |
+| Type       | The runtime representation of a class. A `Type` is actually a defined type of object in its own right, storing metadata about the class and allowing limited direct interaction with the features of the class itself. | `[System.Collections.Hashtable]` |
 
 # PowerShell Terms
 
-Cast - In PowerShell, this is an attempt to convert an object from one type to another. For example, a string can be "cast" into an integer: [Int]'1'
-enum - Introduced as a keyword in PowerShell 5.0. A set of constant values of a specific type used to define a simple set of possible values for a specific purpose with lexical representations.
+| Term | Definition | Example | Reference Link |
+|:----:|:-----------|:--------|:--------------:|
+| Cast | In PowerShell, this operation is much more loosely-defined and cannot be easily overloaded. Many methods of conversion will be attempted when casting in PowerShell, and only after _all_ of them have failed will you receive an error.  | `[int]"12.4"` |
 enumerate - To loop through each item in a collection
 Tokenizer - include brief example / concept
 Unroll - Automatically tranform a collection into its composite items as individual objects. Typically used to refer to member unrolling. For example the AddressFamily property of two IPAddress objects: ([IPAddress[]]('1.2.3.4', '::1')).AddressFamily
