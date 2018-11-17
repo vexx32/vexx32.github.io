@@ -11,8 +11,8 @@ permalink: /glossary/
 
 # Terms From C# and .NET
 
-| Term | Definition | Example | Reference Link |
-|:----:|:-----------|:--------|:--------------:|
+| Term       | Definition | Example | Reference Link |
+|:----------:|:-----------|:--------|:--------------:|
 | Assembly   | A compiled file, usually a `.dll`, that contains a library of (typically) related types. | `System.Drawing.Common.dll` |
 | Cast       | In C#, this is a tightly-defined operation which converts one type into another which can be overloaded by defining `op_Explicit()` in a class. | `var n = (uint)x;` |
 | Class      | The definition of a specific type, set out in code. The _template_ from which an object of that specific type is created. Classes can _inherit_ (aka be created by automatically copying from) other classes. | `class MyClass { ... }` |
