@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Glossary of PowerShell & Related Terms
-permalink: /terms/
+permalink: /glossary/
 ---
 
 # Table of Contents
