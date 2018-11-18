@@ -44,7 +44,7 @@ Double-Hop
 Profile
 
 ## PowerShell Primitive Types (whats a primitive)
-
+Primitive Type -
 Int -
 String -
 Hashtable -
