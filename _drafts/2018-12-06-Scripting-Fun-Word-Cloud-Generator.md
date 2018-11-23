@@ -91,11 +91,10 @@ was a fun little project to implement imaginary numbers; I'll cover _that_ perha
 [PSPowerHour](https://github.com/PSPowerHour/PSPowerHour) session!
 
 As I was considering ways to scan for available positions to place words, I realised that complex
-numbers (a.k.a. imaginary numbers) might offer a very easy solution. For those of you who are like
-me, never having really looked at them until I found a lovely little Youtube series
-on the history and practicality of them and how they work, imaginary numbers can always be
-represented in two forms: rectangular form **(a + bi)**, and polar coordinate form
-**(m &angle; &theta;)**.
+numbers (a.k.a. imaginary numbers) might offer a very easy solution.
+For those of you who are like me, never having really looked at them until I found a lovely little
+Youtube series on them, imaginary numbers can always be represented in two forms: rectangular form
+**(a + bi)**, and polar coordinate form **(m &angle; &theta;)**.
 
 ## Complex Numbers As Coordinates
 
@@ -103,3 +102,48 @@ Now, that's fun and all, but our _use case_ here is that they offer a fairly nea
 translate a `magnitude` and `angle` from a center point into `real` and `imaginary` portions.
 With a bit of handwaving, we can pretend they are instead `X` and `Y` coordinates, which is actually
 not that far from the truth: just a pair of coordinates, or a single point, in the complex plane.
+
+That means we can quite easily create a loop that scans a full circle, and expand that to scan the
+entire image in a circular or even spiral fashion, should we want to! Just one more hurdle... you
+see, polar coordinate form in .NET's `System.Numerics.Complex` numbers requires us to input angles
+in _radians_.
+Just a little extra math!
+
+```powershell
+using namespace System.Drawing
+using namespace System.Numerics
+
+foreach ($Angle in 0..360) {
+    $Radians = ([math]::PI / 180) * $Angle
+    $Distance = 10
+    $Complex = [Complex]::FromPolarCoordinates($Distance, $Radians)
+
+    $Point = [PointF]::new($Complex.Real, $Complex.Imaginary)
+}
+```
+
+# A Complete Algorithm
+
+The _full_ code is rather more complicated, having additional random jitter here and there for a bit
+more variety in output, and adding a bit of scaling for different image sizes, but that is
+essentially the idea with its scanning algorithm, plus a bit of checking to see if the space it's
+looking at is already occupied.
+
+Working out font sizes was a particular sticking point for a short while, but in the end I came up
+with a way to calculate everything out relatively neatly.
+I also decided to alternate direction of radial scanning to avoid the tendency to place words on one
+side instead of the other, and added a small bit of backtracking to help maximise packing as much as
+possible, as it scans through words progressively.
+
+Once again, if you'd like to check it out in detail, head on over to [my Github repo](https://github.com/vexx32/PSWordCloud)
+where you can see the full working code.
+
+You can also download it as a module from the PowerShell gallery with a simple command.
+
+```powershell
+Import-Module PSWordCloud
+```
+
+It will accept piped or direct input of text to its `New-WordCloud` command, and you can freely
+explore different possibilities with the rather overdone set of parameters I gave it.
+If you make anything particularly interesting or pretty with it, do let me know!
