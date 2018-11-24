@@ -147,3 +147,5 @@ Import-Module PSWordCloud
 It will accept piped or direct input of text to its `New-WordCloud` command, and you can freely
 explore different possibilities with the rather overdone set of parameters I gave it.
 If you make anything particularly interesting or pretty with it, do let me know!
+
+Thanks for reading!
