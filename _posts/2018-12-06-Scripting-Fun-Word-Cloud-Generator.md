@@ -135,8 +135,13 @@ I also decided to alternate direction of radial scanning to avoid the tendency t
 side instead of the other, and added a small bit of backtracking to help maximise packing as much as
 possible, as it scans through words progressively.
 
-Once again, if you'd like to check it out in detail, head on over to [my Github repo](https://github.com/vexx32/PSWordCloud)
-where you can see the full working code.
+There is one or two more interesting little bits of code that I could mention, but we covered
+[ArgumentCompleters](/2018/11/29/Dynamic-ValidateSet/#option-1:-[argumentcompleter()]-and-[validatescript()])
+last week, and in truth the more interesting `[ArgumentTransformationAttribute]` class in
+`System.Management.Automation` deserves its own blog post, which I'll write for next week!
+
+Once again, if you'd like to check out the word cloud code in detail, head on over to
+[my Github repo](https://github.com/vexx32/PSWordCloud) where you can see the full working code.
 
 You can also download it as a module from the PowerShell gallery with a simple command.
 
@@ -146,6 +151,6 @@ Import-Module PSWordCloud
 
 It will accept piped or direct input of text to its `New-WordCloud` command, and you can freely
 explore different possibilities with the rather overdone set of parameters I gave it.
-If you make anything particularly interesting or pretty with it, do let me know!
+If you make anything particularly interesting or pretty with it, do let me know.
 
 Thanks for reading!
