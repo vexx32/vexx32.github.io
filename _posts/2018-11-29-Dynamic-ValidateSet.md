@@ -46,7 +46,7 @@ function Clear-FileInCurrentLocation {
         )]
         [ValidateScript(
             {
-                Get-ValidValues -Path (Get-Location)
+                $_ -in (Get-ValidValues -Path (Get-Location))
             }
         )]
         [string]
