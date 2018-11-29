@@ -10,7 +10,7 @@ An all too common pattern I see get used in some more advanced scripts is the us
 where it isn't needed. Unfortunately, `dynamicparam` can be complicated, quirky, and frustrating to
 work with, and is really best avoided in a majority of cases when creating advanced functions or
 _script cmdlets_, as I've occasionally heard them called. Thankfully, there are a few alternatives
-hat are often a good bit easier.
+that are often a good bit easier.
 
 # Option 1: `[ArgumentCompleter()]` and `[ValidateScript()]`
 
