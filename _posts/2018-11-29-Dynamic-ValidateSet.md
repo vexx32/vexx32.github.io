@@ -16,7 +16,7 @@ that are often a good bit easier.
 
 If you're writing for Windows PowerShell, I think a much more _effective_ alternative is to combine
 `[ArgumentCompleter()]` and `[ValidateScript()]` in order to mimic the effect of a `[ValidateSet()]`
-but give you the ability to run PowerShell script in order to determine the available vales.
+but give you the ability to run PowerShell script in order to determine the available values.
 
 ## Let's See an Example
 
