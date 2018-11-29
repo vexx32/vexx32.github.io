@@ -12,7 +12,7 @@ work with, and is really best avoided in a majority of cases when creating advan
 _script cmdlets_, as I've occasionally heard them called. Thankfully, there are a few alternatives
 that are often a good bit easier.
 
-# Option 1: `[ArgumentCompleter()]` and `[ValidateScript()]`
+# Option 1: `ArgumentCompleter` and `[ValidateScript()]`
 
 If you're writing for Windows PowerShell, I think a much more _effective_ alternative is to combine
 `[ArgumentCompleter()]` and `[ValidateScript()]` in order to mimic the effect of a `[ValidateSet()]`
@@ -65,6 +65,37 @@ being applied to.
 For more information on those parameters, what they give you, and how to utilise them, see the
 [MSDN Docs Page](https://docs.microsoft.com/en-us/dotnet/api/system.management.automation.iargumentcompleter.completeargument?view=powershellsdk-1.1.0)
 for the underlying method and what the values passed in will correspond to.
+
+## `Register-ArgumentCompleter`
+
+Sometimes you'll come across a function you _wish_ had an ArgumentCompleter, but doesn't.
+For those times, there's `Register-ArgumentCompleter` &mdash; you can apply an ArgumentCompleter to
+literally anything you want.
+
+For example, let's say we want `Invoke-Command` to autocomplete the presently listed machines in our
+current domain.
+
+```powershell
+Register-ArgumentCompleter -CommandName Invoke-Command -ParameterName ComputerName -ScriptBlock {
+    Get-ADComputer -Filter * | Select-Object -ExpandProperty Name | ForEach-Object {
+        $Text = $_
+        if ($Text -match '\s') { $Text = $Text -replace '^|$','"' }
+
+        [System.Management.Automation.CompletionResult]::new(
+            $Text,
+            $_,
+            'ParameterValue',
+            "$_"
+        )
+    }
+}
+```
+
+This isn't advisable in general, as it would be quite slow, but a more sophisticated completion
+script could be devised to do something similar to this.
+
+This is _fantastic_ for those cases where a module you didn't create, or a compiled module you'd
+like to include a completer for, would otherwise lack desired completion.
 
 # Option 2: Implement `IValidateSetValuesGenerator`
 
