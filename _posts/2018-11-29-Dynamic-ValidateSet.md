@@ -105,7 +105,7 @@ to provide the valid input values. This can all be done rather simply with Power
 you have the class defined, you pass in the _type name_ of the class as a `[type]` object to the
 standard `[ValidateSet()]` attribute.
 
-Let's see the above example with this method instead:
+Let's see the first example with this method instead:
 
 ```powershell
 using namespace System.Management.Automation
