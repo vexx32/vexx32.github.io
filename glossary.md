@@ -6,6 +6,11 @@ permalink: /glossary/
 
 # Index of Terms
 
+Below is a (probably wildly incomplete) list of common PowerShell and C# terms that you may find
+useful.
+If a specific term is not present, please feel free to [contact](/about/) me and ask me to amend
+this page!
+
 # Common Terminology
 
 ## Assembly
