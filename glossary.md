@@ -215,32 +215,62 @@ PowerShell string subexpressions are only permitted in double-quoted strings.
 
 [Back to Index](#index-of-terms)
 
-Pipeline -
-Command - An instruction to run in PowerShell. Includes functions, scripts, native applications, cmdlets, and aliases.
-Function -
-Advanced Function -
-Cmdlet - A command written in C# or another .NET language. Normally compiled into an assembly.
-Scope
-Variable
-Splat
-Generics
-Method
-Operators
-Output Streams
-Error - Terminating Error -
-Error - Non-terminating Error -
-Exception -
-Dot Sourcing
-Call Operator
+## Pipeline
 
-PS Remoting
-Double-Hop
-Profile
+## Command
 
-## PowerShell Primitive Types (whats a primitive)
-Primitive Type -
-Int -
-String -
-Hashtable -
-Array -
-Double -
+An instruction to run in PowerShell. Includes functions, scripts, native applications, cmdlets, and aliases.
+
+## Function
+
+## Advanced Function
+
+## Cmdlet
+
+A command written in C# or another .NET language. Normally compiled into an assembly.
+
+## Scope
+
+## Variable
+
+## Splat
+
+## Generics
+
+## Method
+
+## Operators
+
+## Output Streams
+
+## Error
+
+### Terminating Error
+
+### Non-Terminating Error
+
+## Exception
+
+## Dot Sourcing
+
+## Call Operator
+
+## PS Remoting
+
+## Double-Hop
+
+## Profile
+
+# PowerShell Primitives
+
+## Primitive Type
+
+## Integer
+
+## String
+
+## Hashtable
+
+## Array
+
+## Double
