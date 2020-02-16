@@ -25,7 +25,7 @@ I've also seen plenty of more experienced folks trip over it quite a lot, so her
       - [Why Use a List](#why-use-a-list)
     - [Using the Pipeline](#using-the-pipeline)
   - [Working With Collections](#working-with-collections)
-    - [`New-Object` v.s. `[item]::new()` v.s. `[item]@()`](#new-object-vs-itemnew-vs-item)
+    - [`New-Object` v.s. `::new()` v.s. Casting](#new-object-vs-new-vs-casting)
     - [Adding Many Items to an Existing Collection](#adding-many-items-to-an-existing-collection)
 - [General Recommendations](#general-recommendations)
 
@@ -278,7 +278,7 @@ $pictures = Get-ChildItem -Filter *.png -Recurse -File |
 
 ### Working With Collections
 
-#### `New-Object` v.s. `[item]::new()` v.s. `[item]@()`
+#### `New-Object` v.s. `::new()` v.s. Casting
 
 This is more of a general point to make about creating new objects in PowerShell, but if you're not aware it bears mention here too.
 `New-Object` is, not to put too fine a point on it, quite slow.
