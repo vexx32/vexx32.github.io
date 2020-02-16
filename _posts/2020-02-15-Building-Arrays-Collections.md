@@ -104,9 +104,9 @@ The pattern here is "create the collection object, and then add each item to it 
 This works quite well for some collection types, but not so well for others.
 In fact, for arrays specifically it's technically not _possible_ to do this &mdash; arrays are actually fixed-size collections.
 If you call `$array.Add(10)` you'll get an error stating as much.
-But this still works, somehow, and it's all thanks to some :sparkles: PowerShell magic! :sparkles:
+But this still works, somehow, and it's all thanks to some ✨ PowerShell magic! ✨
 
-> :information_source: **Behind the Scenes**
+> ℹ **Behind the Scenes**
 >
 > PowerShell's `+` and `+=` operators are designed to work with arrays in a relatively unusual way.
 > When you try to add items to an array like this, what _actually_ happens goes something like this:
@@ -151,7 +151,7 @@ I know I would; ArrayList comes from the very old days of .NET, hailing all the 
 
 In fact, the documentation page for ArrayList warns against its continued use:
 
-> :information_source: **Important**
+> ℹ **Important**
 >
 > We don't recommend that you use the ArrayList class for new development.
 > Instead, we recommend that you use the generic `List<T>` class.
@@ -215,7 +215,7 @@ foreach ($value in 1..5) {
 That certainly looks a little tidier.
 The long type name is a bit much at times, but at least in PowerShell 5.1 and up, you can use `using namespace System.Collections.Generic` to let you just use `[List[int]]` if you prefer.
 
-> :memo: **Note**
+> 📝 **Note**
 >
 > While the .NET documentation frequently uses the C# syntax `List<T>`, when we get to PowerShell we actually use square brackets to indicate the generic type parameter instead.
 > `List<T>` instead becomes `[List[T]]`, and in practical usage `T` is replaced with another type name.
@@ -261,7 +261,7 @@ Because this utilises the built-in PowerShell pipeline (which, remember, uses Ar
 We're just using what PowerShell has always been ready to provide for us.
 This is also one of the simplest ways to keep your code highly compatible across PowerShell versions with minimal effort.
 
-> :information_source: **Compatibility**
+> ℹ **Compatibility**
 >
 > This pattern works with _all_ released versions of PowerShell, even back to version **1**.
 > For compatibility, it's the absolute best option.
@@ -315,13 +315,13 @@ Taking all the above into account, we can establish some broad recommendations w
 1. If for some reason you cannot assign the statement or need to build multiple collections in the same loop, use a `List<T>`.
 1. If you have a scenario where you need to add multiple items to a collection, use a `List<T>` and make short work of it with `AddRange()`.
 
-I went into this post thinking it'd be short and sweet, but I really can't help but explain things to the *n*th degree, can I? :joy:
+I went into this post thinking it'd be short and sweet, but I really can't help but explain things to the *n*th degree, can I? 😂
 
 That's all I have for now, I think.
 If you have any questions or comments, feel free to leave a comment below.
 
 I'm also keeping an eye out for some more content to cover to get back into regular blog posts, so if there's something I haven't already covered that you're needing some explanation on and think I can help, give me a shout on Twitter or one of the community channels.
-Have a great day! :blush:
+Have a great day! 😊
 
 <!-- Reference Links -->
 [csharp-interfaces]: https://docs.microsoft.com/en-us/dotnet/csharp/programming-guide/interfaces/
