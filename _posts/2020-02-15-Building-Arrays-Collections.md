@@ -11,6 +11,8 @@ Trying to get back into the swing of things for 2020 now that I'm mostly settled
 So, let's take a look at a classic problem that never fails to confuse folks just getting into PowerShell.
 I've also seen plenty of more experienced folks trip over it quite a lot, so here we are.
 
+Before we begin, many thanks to Chris Dent for asking me to put this together and the basis for the recommendations at the end!
+
 ## Contents
 
 - [Contents](#contents)
