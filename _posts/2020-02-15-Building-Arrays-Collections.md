@@ -114,7 +114,7 @@ But this still works, somehow, and it's all thanks to some ✨ PowerShell magic!
 > When you try to add items to an array like this, what _actually_ happens goes something like this:
 >
 > 1. PowerShell checks the size of the collection in `$array` and the number of items being added to it (in this case, just one each time).
-> 1. PowerShell creates a _completely different_ array of the correct size, and
+> 1. PowerShell creates a _completely different_ array of the correct size.
 > 1. The original array is copied into this new array, along with the new item(s).
 >
 > This is also why it's perfectly possible to join two arrays together with the `+` or `+=` operators.
