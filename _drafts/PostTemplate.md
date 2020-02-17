@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Post Title Goes Here
+title: ________
 date: YYYY-MM-DD
 categories: [placeholder]
 tags: [placeholder]
@@ -8,6 +8,6 @@ tags: [placeholder]
 
 Intro paragraph (this will be used as the synopsis/summary/excerpt on the post listing pages)
 
-# First Heading
+## First Heading
 
 Some text.
