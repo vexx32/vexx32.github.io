@@ -129,13 +129,99 @@ Just one little detail to keep in mind. 🙂
 
 #### Array Subexpressions
 
-how array subexpressions work and what you can use em for
+Array subexpressions work **almost** exactly the same was as regular subexpressions.
+They have two key differences:
+
+1. You cannot directly insert an array subexpression into a string.
+1. The result of an array subexpression is always (as the name implies) an array.
+   (Specifically, it will always be an `[object[]]` array.)
+
+> 📝 **Note**
+>
+> Array subexpressions will only wrap the output in an array if the output is not already an array.
+> In other words, it guarantees the output will ultimately be an `[object[]]` array.
+> If the result is a single item, it will be boxed into an `[object[]]` array, and if it's an array of another type, it will box each item and hand back an `object[]` array.
+> In most cases, PowerShell will already have boxed the output as `[object[]]` due to its pipeline processing.
+
+In every other way, they work identically to standard subexpressions.
+You'll most often see these used as an "explicit" variant of defining an array.
+
+```powershell
+$array = @( 1, 2, 3, 4, 5 )
+```
+
+While this can be used for clarity, it is in effect somewhat redundant.
+The `,` comma operator is what's actually creating the array in this instance.
+The subexpression operator simply ensures the result is in fact an array.
 
 ### Inline Scriptblock Invocations
 
-how scriptblocks can be used to invoke things and collect output like subexs
+Scriptblocks can be defined and used directly in a script, much like a subexpression.
+Unlike subexpressions, however, scriptblocks are usually used to store code &mdash; they won't be invoked unless you use one of the invocation operators.
+A scriptblock, as the name implies, is just a block of script.
+Any valid PowerShell code is valid here, with only a scant few exceptions.
+
+```powershell
+# `&` or `.` must be used to invoke the scriptblock
+$Results = & {
+    Get-ChildItem
+    10..100
+}
+```
+
+This has a similar effect to using a subexpression.
+However, using a scriptblock creates a new scope &mdash; any new variables or other scoped data will not be available outside the scriptblock.
+
+That is, unless you dot-source the scriptblock.
+
+```powershell
+$Results = . {
+    $folders = Get-ChildItem -Directory
+    $folders | Get-ChildItem -File
+}
+```
+
+In this instance, both the `$Results` variable and the `$folders` variable would become available in the same scope after the scriptblock finishes executing.
+
+> ℹ **Note**
+>
+> Dot-sourcing a scriptblock is more expensive in terms of performance than simply invoking it.
+> Generally speaking, invoking the scriptblock should be the typical case, and dot-sourcing generally should be an exception to the rule.
 
 #### `{}.GetNewClosure()`
+
+Something to note about scriptblocks is that you can store them for later invocation, like an impromptu function.
+Those of you coming from a C# background are probably already familiar with lambda expressions &mdash; this is something similar.
+
+```powershell
+$Value = 12
+$Script = {
+    $Value + 12
+}
+
+$Value = & $Script
+$Value # output: 24
+
+& $Script # output: 36
+```
+
+As you can see, although the scriptblock is indeed a stored _action_, its effect still depends on the code around it.
+In some cases, you won't want this context-sensitive behaviour as much.
+For these cases, you can call `.GetNewClosure()` on the scriptblock to effectively tie it to the context where it was defined.
+
+If we apply that to the above example, you can see it in action:
+
+```powershell
+$Value = 12
+$Script = {
+    $Value + 12
+}.GetNewClosure()
+
+$Value = & $Script
+$Value # output: 24
+
+& $Script # output: 36
+```
 
 ## Expressive Coding with Subexpressions and Scriptblock Invocations
 
@@ -156,13 +242,5 @@ $Values = @(
         Other-SubExpressions
     )
 )
-
-$Results = & {
-    Do-Things
-}
-
-$ImportedResults = . {
-    Do-Things -OutVariable OtherVar
-}
 
 ```
