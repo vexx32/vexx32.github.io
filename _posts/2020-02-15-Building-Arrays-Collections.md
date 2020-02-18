@@ -13,9 +13,6 @@ I've also seen plenty of more experienced folks trip over it quite a lot, so her
 
 Before we begin, many thanks to Chris Dent for asking me to put this together and the basis for the recommendations at the end!
 
-## Contents
-
-- [Contents](#contents)
 - [Background Information](#background-information)
   - [Background - Collections in .NET](#background---collections-in-net)
   - [ICollection](#icollection)
