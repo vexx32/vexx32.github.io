@@ -186,7 +186,7 @@ In this instance, both the `$Results` variable and the `$folders` variable would
 > ℹ **Note**
 >
 > Dot-sourcing a scriptblock is more expensive in terms of performance than simply invoking it.
-> Generally speaking, invoking the scriptblock should be the typical case, and dot-sourcing generally should be an exception to the rule.
+> Generally speaking, invoking the scriptblock should be the typical case, and dot-sourcing should be an exception to the rule.
 
 #### `{}.GetNewClosure()`
 
@@ -220,8 +220,48 @@ $Script = {
 $Value = & $Script
 $Value # output: 24
 
-& $Script # output: 36
+& $Script # output: 24
 ```
+
+That is, no matter where you call the scriptblock from, it behaves the same way.
+It's hard to see how this is useful here, but it comes in _very_ handy if you ever need to handle events in PowerShell.
+
+Events in C# are pretty easy to work with.
+In PowerShell, they can be problematic, since there's no guarantee an event will be invoked in the same context that it was registered in.
+It can very easily end up being called from a completely separate thread.
+This means that the scriptblock has to be effectively self-contained &mdash; if you need to reference anything that's defined or created outside the scriptblock itself, `GetNewClosure()` comes in very handy.
+
+```powershell
+function Get-Collection {
+    [CmdletBinding()]
+    param() end {
+        $collection = [System.Management.Automation.PSDataCollection[int]]::new()
+        $sb = {
+            if ($null -eq $collection) {
+                [Console]::WriteLine("COLLECTION IS NULL OH NO")
+                return
+            }
+
+            [Console]::WriteLine("Collection length is now $($collection.Count + 1).")
+        }.GetNewClosure()
+
+        $collection.add_DataAdding($sb)
+        $PSCmdlet.WriteObject($collection, $false)
+    }
+}
+
+$col = Get-Collection
+$col.Add(10)
+```
+
+Credit to [Patrick Meinecke](https://twitter.com/SeeminglyScienc) for the lovely example here.
+
+Essentially what's going on here is we're creating a `PSDataCollection`, and then registering a scriptblock to its `DataAdding` event.
+This event triggers whenever you add items to the collection.
+Here, `GetNewClosure()` allows the scriptblock to reference its own parent collection directly, without fear that the `$collection` variable won't exist when the event fires.
+
+Calling `.Add()` causes the event to fire as the new data is added, and the reference to `$collection` is maintained.
+You won't always need this capability, but it's a very handy tool to keep on hand for when you do need it!
 
 ## Expressive Coding with Subexpressions and Scriptblock Invocations
 
