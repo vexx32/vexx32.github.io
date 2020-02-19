@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Expressive Subexpressions
+title: Handling PowerShell's Versatile Subexpressions
 date: 2020-02-24
 categories: [powershell, code style, good practices]
 tags: [subexpression, functional, style]
@@ -71,7 +71,7 @@ $Values = $(
 ```
 
 What are you looking at me like that for?
-Yes, it's perfectly legal (and quite useful!) syntax to drop an entire statement block into a subexpression.
+Yes, it's perfectly legal (and quite useful on occasion!) syntax to drop an entire statement block into a subexpression.
 Ifs, switches, loops, you name it.
 Pretty much any language statement is a legal entry in a subexpression, and though I'd advise against it you _can_ do odd things like embedding an entire if statement into a string.
 More to the point, though, what kind of result would you expect to find in `$Values` when all's said and done?
@@ -91,7 +91,7 @@ So, our end result, if we'd written it all out manually, would look a bit like t
 # Final array size: 25
 $Values = [object[]]::new(25)
 
-# First four values -> Test-Connection Output (PS Core / 7)
+# First four values -> Test-Connection Output (if using PS Core 6.2.x / 7)
 $Values[0..3] = Test-Connection 1.1.1.1
 
 # Fifth value -> result of the if statement
@@ -164,15 +164,16 @@ Any valid PowerShell code is valid here, with only a scant few exceptions.
 ```powershell
 # `&` or `.` must be used to invoke the scriptblock
 $Results = & {
-    Get-ChildItem
-    10..100
+    $folders = Get-ChildItem -Directory
+    $folders | Get-ChildItem -File
 }
 ```
 
 This has a similar effect to using a subexpression.
 However, using a scriptblock creates a new scope &mdash; any new variables or other scoped data will not be available outside the scriptblock.
+In the above example, the `$folders` variable becomes unavailable as soon as you step outside the scriptblock once again.
 
-That is, unless you dot-source the scriptblock.
+The other option is to dot-source the scriptblock.
 
 ```powershell
 $Results = . {
@@ -263,24 +264,137 @@ Here, `GetNewClosure()` allows the scriptblock to reference its own parent colle
 Calling `.Add()` causes the event to fire as the new data is added, and the reference to `$collection` is maintained.
 You won't always need this capability, but it's a very handy tool to keep on hand for when you do need it!
 
-## Expressive Coding with Subexpressions and Scriptblock Invocations
+## Putting it All Together
 
-some nice examples of code that combine them
+I've often found that this kind of thing is best illustrated by example, so I'll try to make this part a bit more on the side of showing than telling.
 
-maybe trivial / contrived examples for funsies
+### Examples
+
+#### Generating a List of Arguments for a Native Command
 
 ```powershell
-
-$Values = @(
-    Command-Name
-    $value
-    $array
-    'raw data'
-    @{ structured = data }
-
-    $(
-        Other-SubExpressions
-    )
+$command = 'docker'
+$args = @(
+    'rm'
+    if ($Force) {
+        '-f'
+    }
+    $Name
 )
 
+& $command @args | Out-Null
 ```
+
+In this example, we're invoking an `rm` command with Docker, and we want to wrap it in a PowerShell function.
+We can expose a `-Force` parameter that it respects, and altering the arguments is as simple as adding the `-f` argument or not.
+Rather than complicate things by trying to add it in later, or duplicating the code completely and having two paths (one with `-f` and one without), we can just add an `if` statement directly in the subexpression.
+
+Personally, I prefer this kind of methodology over manually manipulating strings any day, especially since that usually leads to `Invoke-Expression`.
+
+#### Creating Match Patterns
+
+```powershell
+$DomainPattern = @(
+    'domain.com'
+    'domain.co.uk'
+    'domain.de'
+).ForEach{ [regex]::Escape($_) } -join '|'
+
+Get-ExoMailbox -ResultSize Unlimited | Where-Object UserPrincipalName -match $DomainPattern
+```
+
+Here, we put together an array of domain names, call `[regex]::Escape()` on each of them so we can use them as literals in a regex expression, and then join on `|` which is a logical OR separator in regex.
+The end result is that we can filter by the regular expression and get any of the objects where the `UserPrincipalName` contains any of the designated domain names.
+It's a great example of when you can use the multiline syntax for an array subexpression.
+Using a multi-line statement is perfectly optional here; the above `$DomainPattern` declaration is identical to the following:
+
+```powershell
+$DomainPattern = @('domain.com', 'domain.co.uk', 'domain.de').ForEach{ [regex]::Escape($_) } -join '|'
+```
+
+There are a couple of reasons I tend to prefer the multiline syntax:
+
+1. Shorter line lengths tend to be a bit easier for me to read; I prefer to scan primarily down a script rather than both down _and_ across.
+1. Breaking the statement over a couple of lines actually makes collaborative coding easier.
+   In a line-by-line diff (the sort you'll see with Git and also with pull requests on Github and similar platforms), the multiline version is _much_ easier on the eyes when you're adding or removing items from the array.
+
+#### Collating Output from Multiple Sources
+
+```powershell
+$FileList = @(
+    Get-ChildItem -Path $Dir1 -File
+    Get-ChildItem -Path $Dir2 -File -Recurse
+)
+
+foreach ($File in $FileList) {
+    Rename-Item -Path $File.FullName -NewName "$($File.Name).old"
+}
+```
+
+Here we're able to collate the output from _multiple_ discrete commands and put them into a single array.
+This example is a little contrived, since you can do a similar thing in _most_ cases just by supplying multiple items to `-Path`.
+However, if you ever have a case where you need to search through each path a little differently (using different filters, for example), this can come in handy.
+
+I also quite like that you can effectively **join** two separate pipelines together and continue them in a third pipeline!
+
+```powershell
+$(
+    Get-ChildItem -Path $Dir1 -File | Where-Object Name -notmatch '\d'
+    Get-ChildItem -Path $Dir2 -Recurse -File | Where-Object Length -gt 4kb
+) |
+    Sort-Object -Property Length |
+    Select-Object -Property Name, Length, FullName |
+    Export-Csv -Path $CsvFile
+```
+
+The syntax can at times be a bit awkward, so feel free to play with it a little until it looks somewhat acceptable to you.
+I haven't needed this more than once or twice, but I rather like the idea that I can sort of funnel many things into a single pipeline if I need to.
+
+### Familiarity
+
+I think a lot of users will likely be confused at first if they see a subexpression pushed to its limits.
+You can go quite a ways into the weeds with them if you really have a need to.
+
+```powershell
+$List = 1..20
+
+$Items = @(
+    $Assertions = switch ($List) {
+        { $_ % 3 -eq 0 } {
+            "$_ is divisible by 3"
+        }
+        { $_ / 2 -gt 8 } {
+            "$_ is more than 16"
+        }
+        7 {
+            "Lucky day!"
+        }
+        default {
+            "Today's not very lucky for you..."
+        }
+    }
+
+    "Your Lucky Numbers are..."
+    $(
+        1..50 | Get-Random -Count (Get-Random -Min 1 -Max 10)
+    ) -join ', '
+
+    $Assertions | Get-Random
+
+    # Push any errors back to the regular output stream here
+    & { Resolve-DnsName google.com } 2>&1
+)
+
+$Items -join ' | '
+```
+
+Would you ever _need_ to?
+Probably not.
+Clearly this is quite a contrived example, but it serves to show just how much you can throw into a single subexpression.
+Yes, if you wanted to, you could use `$()` the same way `@()` is used here, if you needed to.
+
+Sometimes you'll find the alternative is significantly longer, more convoluted, and quite a bit slower.
+There are advantages to be had in being able to contain so many different constructs inside a single statement, from time to time.
+
+I would definitely be wary of trying to encapsulate _too_ many complicated statements into a single subexpression, to be sure.
+Knowing it's possible just ensures you have the option open to you, should you ever need it.
