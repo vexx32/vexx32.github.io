@@ -481,6 +481,35 @@ footer {
   text-align: center;
 }
 
+//////////////////////////////////
+//          DARK MODE           //
+//////////////////////////////////
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background: $dark-background;
+        color: $dark-relief;
+    }
+
+    #main {
+        border-left-color: $dark-relief;
+        border-right-color: $dark-relief;
+    }
+
+    #postTitle {
+        border-bottom-color: $dark-relief;
+
+        h1 {
+            color: $dark-h1;
+        }
+    }
+
+
+    blockquote {
+        background: $dark-parchment;
+    }
+}
+
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 @import "highlights";
