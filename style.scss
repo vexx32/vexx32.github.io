@@ -507,6 +507,10 @@ footer {
     .post blockquote {
         background-color: $dark-parchment;
     }
+
+    nav a {
+        color:rgba(224, 183, 108, 0.8);
+    }
 }
 
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
