@@ -498,12 +498,11 @@ footer {
 
     #postTitle {
         border-bottom-color: $dark-relief;
-
-        h1 {
-            color: $dark-h1;
-        }
     }
 
+    h1 {
+        color: $dark-h1;
+    }
 
     .post blockquote {
         background-color: $dark-parchment;
