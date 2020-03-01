@@ -491,6 +491,10 @@ footer {
         color: $dark-relief;
     }
 
+    .masthead {
+        border-bottom-color: $dark-relief;
+    }
+
     #main {
         border-left-color: $dark-relief;
         border-right-color: $dark-relief;
@@ -504,6 +508,10 @@ footer {
         color: $dark-h1;
     }
 
+    .posts > .post {
+        border-bottom-color: $dark-relief;
+    }
+
     .post blockquote {
         background-color: $dark-parchment;
     }
@@ -514,6 +522,7 @@ footer {
 
     .wrapper-footer {
         background-color: $dark-background;
+        border-top-color: $dark-relief;
     }
 }
 
