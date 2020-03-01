@@ -511,6 +511,10 @@ footer {
     nav a {
         color:rgba(224, 183, 108, 0.8);
     }
+
+    .wrapper-footer {
+        background-color: $dark-background;
+    }
 }
 
 // Settled on moving the import of syntax highlighting to the bottom of the CSS
