@@ -83,7 +83,7 @@ if ($BlogPostFile) {
 
     $UrlEnding = $BlogPostFile.Basename -replace '([0-9]{4})-([0-9]{2})-([0-9]{2})-(.+)', '$1/$2/$3/$4'
 
-    $FriendlyTitle = @( $BlogPostFile | Select-String -Pattern '^title:' )[0].Line -replace '^title: '
+    $FriendlyTitle = @( $BlogPostFile | Select-String -Pattern '^title:' )[0].Line -replace '^title: \p{Pi}?|\p{Pf}$'
 
     $BlogUrl = "https://vexx32.github.io/$UrlEnding"
     $ShortLink = Invoke-WebRequest -Uri "https://tinyurl.com/api-create.php?url=$BlogUrl" -UseBasicParsing |
