@@ -220,7 +220,7 @@ Describe "$ModuleName Sanity Tests - Help Content" -Tags 'Module' {
                 $Parameters.Count | Should -Be $Ast.Body.ParamBlock.Parameters.Count -Because 'the number of parameters in the help should match the number in the function script'
             }
 
-            It "has a description for $Command parameter -<Name>" -TestCases $Parameters -Skip(-not $Parameters) {
+            It "has a description for $Command parameter -<Name>" -TestCases $Parameters -Skip:(-not $Parameters) {
                 $Description | Should -Not -BeNullOrEmpty -Because "parameter $Name should have a description"
             }
 
