@@ -15,7 +15,7 @@ I decided to take a thorough look, and it proved to be quite a bit more complica
 
 The original code we'll be hacking away at comes fom [François-Xavier Cat (aka lazywinadmin)](https://lazywinadmin.com/2016/05/using-pester-to-test-your-comment-based.html) and looks like this:
 
-```ps1
+```powershell
 Describe "AdsiPS Module" -Tags "Module" {
 
     # Import Module
@@ -145,7 +145,7 @@ You'll notice I have a habit of placing code explicitly in regions marked `Disco
 This is purely something I do for clarity; Pester doesn't require it, and won't recognise it differently to anything else.
 I'm hopeful that at some point in future Pester will provide an explicit `BeforeDiscovery` block for this purpose, but I'm unsure as to when that's likely to be implemented.
 
-```ps1
+```powershell
 #region Discovery
 
 $ModuleName = 'MyModule'
