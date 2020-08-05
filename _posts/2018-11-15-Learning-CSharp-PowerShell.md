@@ -385,24 +385,8 @@ function Export-Png {
         The text will be in a light grey colour with a dark background, matching the
         default display of the PowerShell Core console.
 
-        .PARAMETER InputString
-        The text input to write onto the image.
-
-        .PARAMETER Path
-        The file path(s) to save the image file to.
-
-        .PARAMETER ToClipboard
-        Copy the image to clipboard instead of saving to file. This image can be
-        pasted into a program such as MS Paint or other image-aware application.
-
-        .PARAMETER ForegroundColor
-        The color of the text in the image.
-
-        .PARAMETER Path
-        The color of the background in the image.
-
         .EXAMPLE
-        "Hello world" | Export-Png -Clipoard
+        "Hello world" | Export-Png -ToClipboard
 
         This will create a small image with the text "Hello world" written on it,
         which will be stored in the clipboard, available for pasting to another
@@ -416,12 +400,14 @@ function Export-Png {
     [CmdletBinding(DefaultParameterSetName = 'SaveFile')]
     [Alias('epng', 'draw')]
     param(
+        # The text input to write onto the image.
         [Parameter(Position = 0, Mandatory, ValueFromPipeline)]
         [Alias('InputObject', 'String', 'Text')]
         [ValidateNotNullOrEmpty()]
         [string[]]
         $InputString,
 
+        # The file path(s) to save the image file to.
         [Parameter(Position = 1, Mandatory, ParameterSetName = "SaveFile")]
         [Alias('DestinationFile', 'OutFile', 'File', 'PSPath')]
         [ValidateScript(
@@ -432,15 +418,20 @@ function Export-Png {
         [string[]]
         $Path,
 
+        # Copy the image to clipboard instead of saving to file. This image can
+        # be pasted into a program such as MS Paint or other image-aware
+        # application.
         [Parameter(Mandatory, ParameterSetName = "Clipboard")]
         [switch]
         $ToClipboard,
 
+        # The color of the text in the image.
         [Parameter()]
         [Alias('Color','FontColor')]
         [KnownColor]
         $ForegroundColor = [KnownColor]::LightGray,
 
+        # The color of the background in the image.
         [Parameter()]
         [KnownColor]
         $BackgroundColor = [KnownColor]::Black
@@ -459,20 +450,22 @@ function Export-Png {
 
         # Create a graphics object to measure the text's width and height.
         $Graphics = [Graphics]::FromImage($Image)
-        $ForegroundColor = [Color]::FromKnownColor($ForegroundColor)
-        $BackgroundColor = [Color]::FromKnownColor($BackgroundColor)
+        $Foreground = [Color]::FromKnownColor($ForegroundColor)
+        $Background = [Color]::FromKnownColor($BackgroundColor)
 
-        if ($PSCmdlet.ParameterSetName -eq 'SaveFile' -and $Path -notmatch '\.png$') {
-            # We always output as .png, so ensure we have correct extension
-            $Path += '.png'
-        }
+        if ($PSCmdlet.ParameterSetName -eq 'SaveFile'){
+            if ($Path -notmatch '\.png$') {
+                # We always output as .png, so ensure we have correct extension
+                $Path += '.png'
+            }
 
-        # Convert possible partial or wildcard paths into their full paths for the .NET methods
-        if (-not (Test-Path -Path $Path)) {
-            $Path = (New-Item -Path $Path).FullName
-        }
-        else {
-            $Path = (Get-Item -Path $Path).FullName
+            # Convert possible partial or wildcard paths into their full paths for the .NET methods
+            if (-not (Test-Path -Path $Path)) {
+                $Path = (New-Item -Path $Path).FullName
+            }
+            else {
+                $Path = (Get-Item -Path $Path).FullName
+            }
         }
     }
     process {
@@ -494,11 +487,11 @@ function Export-Png {
         $Graphics = [Graphics]::FromImage($Image)
 
         # Set Background color
-        $Graphics.Clear($BackgroundColor)
+        $Graphics.Clear($Background)
         $Graphics.SmoothingMode = [Drawing2D.SmoothingMode]::AntiAlias
         $Graphics.TextRenderingHint = [Text.TextRenderingHint]::AntiAlias
 
-        $Graphics.DrawString($ImageText, $ImageFont, [SolidBrush]::new($ForegroundColor), 0, 0)
+        $Graphics.DrawString($ImageText, $ImageFont, [SolidBrush]::new($Foreground), 0, 0)
         $Graphics.Flush()
 
         switch ($PSCmdlet.ParameterSetName) {
