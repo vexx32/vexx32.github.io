@@ -1,16 +1,49 @@
 ---
 layout: post
-title: ________
-date: YYYY-MM-DD
-categories: [placeholder]
-tags: [placeholder]
+title: Provisioning AWS EC2 Spot Instances with PowerShell
+date: 2020-08-25
+categories: [AWS, PowerShell]
+tags: [AWS, Amazon, PowerShell, spot instances]
 ---
 
-Intro paragraph (this will be used as the synopsis/summary/excerpt on the post listing pages)
+Over the last couple of weeks, I've been working on something that's needed some particular AWS instances.
+Specifically, we needed something that supports virtualization, which rules out everything but the `*.metal` [instance types][instance-types].
+Before tackling this issue, the only real experience I had working with AWS was via other tooling, mainly [Test Kitchen][kitchen-ci] and [Packer][packer].
 
-## First Heading
+## AWS Instances
 
-Some text.
+AWS supports two very broad types of EC2 instances; [on-demand][on-demand-instances] and [spot][spot-instances].
+On-demand is exactly what it says on the tin &mdash; you pay a fixed price and you get an instance for as long as you need it.
+Well... mostly, anyway.
+
+That works very well for the virtual instances which can all be created and destroyed very easily in AWS' infrastructure.
+For what I'm working on, though, I need what is commonly called a "bare-metal" instance.
+That means a few things are a little different.
+
+Firstly, they're quite a bit more expensive.
+Typical prices range from $6-$15 USD per hour, though that can vary by region.
+Secondly, they're a bit slower to create or destroy, which can be a little annoying at times.
+Thirdly, they're less ubiquitous than the virtualized instances; I ran into issues provisioning them multiple times, often being told that no instances of the type we wanted were available in my region.
+
+I imagine all of these things boil down more or less to the relative difficulty of needing separate pieces of hardware for these instances to run on, unlike the virtualized instances.
+
+### Spot Instances
+
+Spot instances can help with the first and third issues by letting us specify the instance we want a little more loosely.
+This tends to mean that spot instances in general are [cheaper][spot-instance-pricing], because AWS has some flexibility in how the instance can be provisioned.
+
+## Requesting Spot Instances with PowerShell
+
+There are quite a few tools out there that can do something like this, but in this instance I chose to work with the AWS PowerShell modules to make things happen.
+Specifically, I'm using the [AWS.Tools.EC2][aws-ec2-module] PowerShell module, which can be installed from the PSGallery:
+
+```powershell
+Install-Module AWS.Tools.EC2
+```
+
+On-demand instances work a bit differently, but for spot instances we have to make and monitor a spot instance request.
+In PowerShell, this can be done with the [`Request-EC2SpotInstance`][request-ec2spotinstance] command.
+
 
 ```powershell
 Set-AWSCredential -AccessKey $AccessKey -SecretKey $SecretKey -Scope Local
@@ -186,3 +219,13 @@ mainSteps:
       - New-NetFirewallRule -Direction Inbound -LocalPort 5986 -Protocol TCP -Action Allow -DisplayName "WinRM-HTTPS"
       - New-WSManInstance winrm/config/Listener -SelectorSet @{Transport='HTTPS'; Address='*'} -ValueSet @{Hostname=$env:COMPUTERNAME;CertificateThumbprint=$cert.Thumbprint}
 ```
+
+<!-- Links -->
+[kitchen-ci]: https://kitchen.ci/
+[packer]: a
+[instance-types]: a
+[on-demand-instance]: a
+[spot-instance]: a
+[spot-instance-pricing]: a
+[aws-ec2-module]: a
+[request-ec2spotinstance]: a
